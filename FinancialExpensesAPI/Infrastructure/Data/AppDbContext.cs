@@ -1,7 +1,7 @@
-﻿using FinancialExpensesAPI.Models;
+﻿using FinancialExpensesAPI.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinancialExpensesAPI.Data
+namespace FinancialExpensesAPI.Infrastructure.Data
 {
     public class AppDbContext : DbContext
     {
