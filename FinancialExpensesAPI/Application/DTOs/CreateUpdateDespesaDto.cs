@@ -1,8 +1,7 @@
-﻿namespace FinancialExpensesAPI.Models
+﻿namespace FinancialExpensesAPI.Application.DTOs
 {
-    public class Despesa
+    public class CreateUpdateDespesaDto
     {
-        public int Id { get; set; }
         public string Descricao { get; set; } = string.Empty;
         public decimal Valor { get; set; }
         public DateTime Data { get; set; }

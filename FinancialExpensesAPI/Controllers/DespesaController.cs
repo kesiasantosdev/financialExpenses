@@ -1,7 +1,9 @@
-﻿using FinancialExpensesAPI.Data;
-using FinancialExpensesAPI.Models;
+﻿using FinancialExpensesAPI.Domain.Entities;
+using FinancialExpensesAPI.Infrastructure.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using FinancialExpensesAPI.Application.DTOs;
+using FinancialExpensesAPI.Application.Services;
 
 
 namespace FinancialExpensesAPI.Controllers
@@ -10,54 +12,47 @@ namespace FinancialExpensesAPI.Controllers
     [ApiController]
     public class DespesaController : ControllerBase
     {
-        private readonly AppDbContext _context;
-        public DespesaController(AppDbContext context)
+        private readonly DespesaService _despesaService;
+
+        public DespesaController(DespesaService despesaService)
         {
-            _context = context;
+            _despesaService = despesaService;
         }
 
         [HttpPost]
-        public IActionResult CriarDespesa([FromBody] Despesa novaDespesa)
+        public async Task<IActionResult> CriarDespesa([FromBody] CreateUpdateDespesaDto despesaDto)
         {
-            _context.Despesas.Add(novaDespesa);
-            _context.SaveChanges();
-            return Ok("Despesa criada com sucesso!");
+            var despesaResposta = await _despesaService.AddAsync(despesaDto);
+            return Ok(despesaResposta);
         }
 
         [HttpGet("GetAll")]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var despesas = _context.Despesas.ToList();
-            return Ok(despesas);
+            var despesasDto = await _despesaService.GetDtosAsync();
+            return Ok(despesasDto);
         }
 
         [HttpPut("{id}")]
-        public IActionResult AtualizarDespesa(int id,[FromBody] Despesa despesaAtualizada)
+        public async Task<IActionResult> AtualizarDespesa(int id, [FromBody] CreateUpdateDespesaDto despesaDto)
         {
-            var despesaExistente = _context.Despesas.Find(id);
-            if (despesaExistente == null)
+            var despesaResposta = await _despesaService.AtualizarDespesa(id, despesaDto);
+            if (despesaResposta == null)
             {
                 return NotFound();
             }
-            despesaExistente.Descricao = despesaAtualizada.Descricao;
-            despesaExistente.Valor = despesaAtualizada.Valor;
-            despesaExistente.Data = despesaAtualizada.Data;
-            despesaExistente.Categoria = despesaAtualizada.Categoria;
-
-            _context.Despesas.Update(despesaExistente);
-            return Ok(despesaAtualizada);
+            return Ok(despesaResposta);
 
         }
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var deleteDespesa = _context.Despesas.Find(id);
-            if (deleteDespesa == null)
+            var sucesso = await _despesaService.DeletarDespesa(id);
+
+            if (!sucesso)
             {
                 return NotFound();
             }
-            _context.Despesas.Remove(deleteDespesa);
-            _context.SaveChanges();
             return NoContent();
         }
     }
