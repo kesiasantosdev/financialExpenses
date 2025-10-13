@@ -4,12 +4,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using FinancialExpensesAPI.Application.DTOs;
 using FinancialExpensesAPI.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace FinancialExpensesAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class DespesaController : ControllerBase
     {
         private readonly DespesaService _despesaService;

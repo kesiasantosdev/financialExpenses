@@ -9,7 +9,8 @@ namespace FinancialExpensesAPI.Infrastructure.Data
         {
         }
         
-         public DbSet<Despesa> Despesas { get; set; }
+        public DbSet<Despesa> Despesas { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             
